@@ -3,14 +3,13 @@
 本次更新：增加指定日期下载功能，优化下载逻辑，修复了因为网站不提供某些页的下载而导致的bug。
 注意：网站不是所有页都提供下载，以前的版本遇到了会报错，以后的版本检测到下载失败的页会丢弃，继续向后下载。
 
-所需模块：requests re PyPDF2 os shutil datetime
+安装所需模块：pip3 install PyPDF2
 
 用法：
 
 下载当天报纸： python3 peoples_daily_download.py 
 
 下载指定日期报纸：python3 peoples_daily_download.py -date 20221010
-
 
 权限：目录下允许读写
 
