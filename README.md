@@ -7,7 +7,9 @@
 
 用法： 
 下载当天报纸： python3 peoples_daily_download.py 
+
 下载指定日期报纸：python3 peoples_daily_download.py -date 20221010
+
 
 权限：目录下允许读写
 
