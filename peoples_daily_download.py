@@ -7,6 +7,11 @@ import shutil
 import datetime
 import sys
 import argparse
+import warnings
+warnings.filterwarnings("ignore")
+fsock = open('./log', 'w')  
+sys.stderr = fsock 
+
 
 headers={
 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36"
@@ -36,23 +41,32 @@ def download(today,partpath,newspaperpatch):
         os.mkdir('./part')
     print("下载中……")
     for page in range(1,len(pagenum)+1):
-        downtplurl="http://paper.people.com.cn/rmrb/images/{0}/{2}/rmrb{1}{2}.pdf"
-        formatpage="{0:0>2}".format(page)
-        downurl=downtplurl.format(today1,today2,formatpage)
-        filename='rmrb{}.pdf'.format(today2+formatpage)
-        response=requests.get(downurl,headers=headers)
-        file=response.content
+        for retry in range(5):
+            downtplurl="http://paper.people.com.cn/rmrb/images/{0}/{2}/rmrb{1}{2}.pdf"
+            formatpage="{0:0>2}".format(page)
+            downurl=downtplurl.format(today1,today2,formatpage)
+            filename='rmrb{}.pdf'.format(today2+formatpage)
+            response=requests.get(downurl,headers=headers)
+            file=response.content
+            print(len(file))
+            if len(file)>1000:
+                break
         with open(partpath+"/"+filename,"wb") as fn:
             fn.write(file)
 def merge(partpath,newspaperpatch):
+    print("合并中……")
     filelist=os.listdir(partpath)
-    pdfFM=PyPDF2.PdfFileMerger(strict=False)
+    try:
+        pdfFM=PyPDF2.PdfFileMerger(strict=False)
+    except:
+        pdfFM=PyPDF2.PdfMerger(strict=False)
     for file in filelist:
         fullpath=partpath+'/'+file
         filesize=os.path.getsize(fullpath) #判断文件大小，有的页本身不支持下载，发现为空则合并
         if filesize<10:
             print("第{}页网站不支持下载，已跳过".format(file[-6:-4]))
             continue
+
         pdfFM.append(fullpath)
     pdfFM.write(newspaperpatch+"/People's.Daily."+filelist[0][4:12]+".pdf")     #保存新文件在newspaperpatch下
     pdfFM.close()
@@ -83,6 +97,7 @@ if __name__ == '__main__':
     download(today,partpath,newspaperpatch) #分片下载
     merge(partpath,newspaperpatch)#合并
     delete(partpath)#删除临时文件夹partpath
+    print("下载成功！")
 
 
 
