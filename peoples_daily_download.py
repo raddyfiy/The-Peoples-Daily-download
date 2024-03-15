@@ -48,7 +48,7 @@ def download(today,partpath,newspaperpatch):
             filename='rmrb{}.pdf'.format(today2+formatpage)
             response=requests.get(downurl,headers=headers)
             file=response.content
-            print(len(file))
+            # print(len(file))
             if len(file)>1000:
                 break
         with open(partpath+"/"+filename,"wb") as fn:
@@ -85,6 +85,7 @@ if __name__ == '__main__':
         argv = sys.argv[1:]
         parser = argparse.ArgumentParser(description='ArgUtils')
         parser.add_argument('-date', type=str, default=today, help="data date")
+        parser.add_argument('--date', type=str, default=today, help="data date")
         args = parser.parse_args()
         today="{}-{}/{}".format(args.date[0:4],args.date[4:6],args.date[6:8])
         print(today)
