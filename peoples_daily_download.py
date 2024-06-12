@@ -56,6 +56,7 @@ def download(today,partpath,newspaperpatch):
 def merge(partpath,newspaperpatch):
     print("合并中……")
     filelist=os.listdir(partpath)
+    filelist.sort()
     try:
         pdfFM=PyPDF2.PdfFileMerger(strict=False)
     except:
