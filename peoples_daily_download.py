@@ -74,7 +74,7 @@ def download(today,partpath,newspaperpatch):
                 print(downloadUrl)
                 formatpage="{0:0>2}".format(page)
                 filename='rmrb{}.pdf'.format(today2+formatpage)
-                response=requests.get(url=downloadUrl,headers=headers,proxies=proxies)
+                response=requests.get(url=downloadUrl,headers=headers)
                 file=response.content
                 print(len(file))
                 if len(file)>1000:
